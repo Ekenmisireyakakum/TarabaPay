@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TarabaPay — Dashboard</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50:'#f0f9ff',100:'#e0f2fe',200:'#bae6fd',
+              300:'#7dd3fc',400:'#38bdf8',500:'#0ea5e9',
+              600:'#0284c7',700:'#0369a1',800:'#075985',900:'#0c4a6e'
+            }
+          },
+          fontFamily:{ sans:['Inter','ui-sans-serif','system-ui'] }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <!-- Supabase JS SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <!-- Paystack popup -->
+  <script src="https://js.paystack.co/v1/inline.js"></script>
+  <!-- QR scanner -->
+  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body class="bg-brand-50 font-sans">
+
+<div class="flex h-screen overflow-hidden">
+
+  <!-- ══ SIDEBAR (desktop) ══════════════════════════════════ -->
+  <aside class="hidden md:flex flex-col w-60 bg-white border-r border-brand-100 py-6 px-4 shrink-0">
+    <div class="flex items-center gap-2 px-2 mb-8">
+      <div class="w-9 h-9 rounded-xl bg-brand-500 flex items-center justify-center">
+        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
+        </svg>
+      </div>
+      <span class="text-lg font-bold text-brand-700">TarabaPay</span>
+    </div>
+
+    <nav class="flex-1 space-y-1" aria-label="Main navigation">
+      <button data-panel="overview" class="nav-link active w-full text-left">
+        <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+        </svg>
+        Overview
+      </button>
+      <button data-panel="data" class="nav-link w-full text-left">
+        <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0"/>
+        </svg>
+        Buy Data
+      </button>
+      <button data-panel="airtime" class="nav-link w-full text-left">
+        <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+        </svg>
+        Airtime
+      </button>
+      <button data-panel="transfer" class="nav-link w-full text-left">
+        <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3m4-4l-4 4m0 0l4 4"/>
+        </svg>
+        Send Money
+      </button>
+      <button data-panel="tv" class="nav-link w-full text-left">
+        <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+        </svg>
+        TV Subscription
+      </button>
+      <button data-panel="bills" class="nav-link w-full text-left">
+        <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+        </svg>
+        Bills Payment
+      </button>
+      <button data-panel="scan" class="nav-link w-full text-left">
+        <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8H4a1 1 0 00-1 1v10a1 1 0 001 1h3M9 4H5a1 1 0 00-1 1v3"/>
+        </svg>
+        Scan to Pay
+      </button>
+      <button data-panel="history" class="nav-link w-full text-left">
+        <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+        </svg>
+        Transactions
+      </button>
+    </nav>
+
+    <button id="logoutBtn"
+      class="nav-link w-full text-left mt-4 text-red-400 hover:bg-red-50 hover:text-red-500">
+      <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+      </svg>
+      Logout
+    </button>
+  </aside>
+
+  <!-- ══ MAIN ═══════════════════════════════════════════════ -->
+  <div class="flex-1 flex flex-col overflow-hidden">
+
+    <!-- Top bar -->
+    <header class="bg-white border-b border-brand-100 px-6 py-4 flex items-center justify-between shrink-0">
+      <div>
+        <h1 id="pageTitle" class="text-lg font-bold text-gray-900">Overview</h1>
+        <p id="pageDate" class="text-xs text-gray-400"></p>
+      </div>
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-full bg-brand-100 flex items-center justify-center">
+          <span id="userInitials" class="text-brand-700 font-bold text-sm">TP</span>
+        </div>
+        <div class="hidden sm:block text-right">
+          <p id="userName"  class="text-sm font-semibold text-gray-800">Loading…</p>
+          <p id="userEmail" class="text-xs text-gray-400"></p>
+          <p id="userAccountNumber" class="text-xs text-brand-600"></p>
+        </div>
+      </div>
+    </header>
+
+    <!-- Panels -->
+    <main class="flex-1 overflow-y-auto p-6 pb-24 md:pb-6 space-y-0">
+
+      <!-- ── OVERVIEW ──────────────────────────────────── -->
+      <section id="panel-overview" class="panel active space-y-6">
+
+        <!-- Wallet card -->
+        <div class="wallet-card">
+          <p class="text-sm text-white/70 mb-1 relative z-10">Available Balance</p>
+          <p id="walletBalance" class="text-4xl font-bold text-white relative z-10">₦0.00</p>
+          <p class="text-xs text-white/60 mt-1 relative z-10">NGN Wallet</p>
+          <button id="fundWalletBtn"
+            class="mt-5 relative z-10 inline-flex items-center gap-2 bg-white text-brand-600 font-semibold text-sm px-5 py-2.5 rounded-xl hover:bg-brand-50 transition">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+            </svg>
+            Fund Wallet
+          </button>
+        </div>
+
+        <!-- Fund wallet modal -->
+        <div id="fundModal" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+          <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm p-7 relative">
+            <button id="closeFundModal" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+              </svg>
+            </button>
+            <h3 class="text-xl font-bold text-gray-900 mb-1">Fund Wallet</h3>
+            <p class="text-sm text-gray-400 mb-5">Enter amount to add to your wallet</p>
+            <div class="space-y-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1.5">Amount (₦)</label>
+                <input id="fundAmount" type="number" min="100" placeholder="Minimum ₦100" class="tp-input" />
+              </div>
+              <div class="flex flex-wrap gap-2">
+                <span class="text-xs text-gray-400 w-full">Quick amounts:</span>
+                <button type="button" data-fund="500"   class="fund-quick px-3 py-1.5 text-xs border border-brand-200 rounded-lg text-brand-600 hover:bg-brand-50">₦500</button>
+                <button type="button" data-fund="1000"  class="fund-quick px-3 py-1.5 text-xs border border-brand-200 rounded-lg text-brand-600 hover:bg-brand-50">₦1,000</button>
+                <button type="button" data-fund="2000"  class="fund-quick px-3 py-1.5 text-xs border border-brand-200 rounded-lg text-brand-600 hover:bg-brand-50">₦2,000</button>
+                <button type="button" data-fund="5000"  class="fund-quick px-3 py-1.5 text-xs border border-brand-200 rounded-lg text-brand-600 hover:bg-brand-50">₦5,000</button>
+                <button type="button" data-fund="10000" class="fund-quick px-3 py-1.5 text-xs border border-brand-200 rounded-lg text-brand-600 hover:bg-brand-50">₦10,000</button>
+              </div>
+              <button id="proceedFundBtn" class="tp-btn">
+                <span>Continue to Payment</span>
+                <svg class="btn-spinner hidden w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick actions -->
+        <div>
+          <h2 class="text-base font-semibold text-gray-800 mb-4">Quick Actions</h2>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            <button data-panel="data" class="service-card flex flex-col items-center gap-3 text-center quick-action">
+              <div class="w-12 h-12 bg-brand-50 rounded-2xl flex items-center justify-center">
+                <svg class="w-6 h-6 text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0"/>
+                </svg>
+              </div>
+              <span class="text-sm font-medium text-gray-700">Buy Data</span>
+            </button>
+            <button data-panel="airtime" class="service-card flex flex-col items-center gap-3 text-center quick-action">
+              <div class="w-12 h-12 bg-brand-50 rounded-2xl flex items-center justify-center">
+                <svg class="w-6 h-6 text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+                </svg>
+              </div>
+              <span class="text-sm font-medium text-gray-700">Airtime</span>
+            </button>
+            <button data-panel="tv" class="service-card flex flex-col items-center gap-3 text-center quick-action">
+              <div class="w-12 h-12 bg-brand-50 rounded-2xl flex items-center justify-center">
+                <svg class="w-6 h-6 text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                </svg>
+              </div>
+              <span class="text-sm font-medium text-gray-700">TV Sub</span>
+            </button>
+            <button data-panel="bills" class="service-card flex flex-col items-center gap-3 text-center quick-action">
+              <div class="w-12 h-12 bg-brand-50 rounded-2xl flex items-center justify-center">
+                <svg class="w-6 h-6 text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                </svg>
+              </div>
+              <span class="text-sm font-medium text-gray-700">Pay Bills</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Recent transactions -->
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="text-base font-semibold text-gray-800">Recent Transactions</h2>
+            <button data-panel="history" class="text-xs text-brand-500 hover:text-brand-700 font-medium quick-action">View all</button>
+          </div>
+          <div id="recentTxns" class="space-y-3">
+            <p class="text-center py-8 text-gray-400 text-sm">Loading…</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── BUY DATA ──────────────────────────────────── -->
+      <section id="panel-data" class="panel">
+        <div class="max-w-md mx-auto">
+          <h2 class="text-xl font-bold text-gray-900 mb-1">Buy Data</h2>
+          <p class="text-sm text-gray-400 mb-6">Purchase mobile data bundles instantly</p>
+          <form id="dataForm" class="bg-white rounded-2xl p-6 shadow-sm border border-brand-100 space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1.5">Network</label>
+              <select id="dataNetwork" class="tp-select" required>
+                <option value="">Select network</option>
+                <option>MTN</option><option>Airtel</option><option>Glo</option><option>9mobile</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1.5">Phone Number</label>
+              <input id="dataPhone" type="tel" placeholder="08012345678" class="tp-input" required />
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1.5">Data Plan</label>
+              <select id="dataPlan" class="tp-select" required>
+                <option value="">Select plan</option>
+                <option value="500MB"  data-amount="200">500MB — ₦200</option>
+                <option value="1GB"    data-amount="350">1GB — ₦350</option>
+                <option value="2GB"    data-amount="600">2GB — ₦600</option>
+                <option value="5GB"    data-amount="1500">5GB — ₦1,500</option>
+                <option value="10GB"   data-amount="2500">10GB — ₦2,500</option>
+                <option value="20GB"   data-amount="4500">20GB — ₦4,500</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1.5">Amount (₦)</label>
+              <input id="dataAmount" type="number" placeholder="Auto-filled from plan" class="tp-input bg-brand-50" readonly />
+            </div>
+            <button type="submit" class="tp-btn">
+              <span>Buy Data</span>
+              <svg class="btn-spinner hidden w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+              </svg>
+            </button>
+          </form>
+        </div>
+      </section>
+
+      <!-- ── AIRTIME ───────────────────────────────────── -->
+      <section id="panel-airtime" class="panel">
+        <div class="max-w-md mx-auto">
+          <h2 class="text-xl font-bold text-gray-900 mb-1">Buy Airtime</h2>
+          <p class="text-sm text-gray-400 mb-6">Top up any Nigerian network instantly</p>
+          <form id="airtimeForm" class="bg-white rounded-2xl p-6 shadow-sm border border-brand-100 space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1.5">Network</label>
+              <select id="airtimeNetwork" class="tp-select" required>
+                <option value="">Select network</option>
+                <option>MTN</option><option>Airtel</option><option>Glo</option><option>9mobile</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1.5">Phone Number</label>
+              <input id="airtimePhone" type="tel" placeholder="08012345678" class="tp-input" required />
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1.5">Amount (₦)</label>
+              <input id="airtimeAmount" type="number" placeholder="e.g. 200" min="50" class="tp-input" required />
+            </div>
+            <div class="flex flex-wrap gap-2">
+              <span class="text-xs text-gray-400 w-full">Quick amounts:</span>
+              <button type="button" data-val="100"  class="quick-amt px-3 py-1.5 text-xs border border-brand-200 rounded-lg text-brand-600 hover:bg-brand-50">₦100</button>
+              <button type="button" data-val="200"  class="quick-amt px-3 py-1.5 text-xs border border-brand-200 rounded-lg text-brand-600 hover:bg-brand-50">₦200</button>
+              <button type="button" data-val="500"  class="quick-amt px-3 py-1.5 text-xs border border-brand-200 rounded-lg text-brand-600 hover:bg-brand-50">₦500</button>
+              <button type="button" data-val="1000" class="quick-amt px-3 py-1.5 text-xs border border-brand-200 rounded-lg text-brand-600 hover:bg-brand-50">₦1,000</button>
+            </div>
+            <button type="submit" class="tp-btn">
+              <span>Buy Airtime</span>
+              <svg class="btn-spinner hidden w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+              </svg>
+            </button>
+          </form>
+        </div>
+      </section>
+
+      <!-- ── TV SUBSCRIPTION ───────────────────────────── -->
+      <section id="panel-tv" class="panel">
+        <div class="max-w-md mx-auto">
+          <h2 class="text-xl font-bold text-gray-900 mb-1">TV Subscription</h2>
+          <p class="text-sm text-gray-400 mb-6">Renew DSTV, GOTV or Startimes</p>
+          <form id="tvForm" class="bg-white rounded-2xl p-6 shadow-sm border border-brand-100 space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1.5">Provider</label>
+              <select id="tvProvider" class="tp-select" required>
+                <option value="">Select provider</option>
+                <option>DSTV</option><option>GOTV</option><option>Startimes</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1.5">Smartcard / IUC Number</label>
+              <input id="tvSmartcard" type="text" placeholder="e.g. 1234567890" class="tp-input" required />
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1.5">Subscription Plan</label>
+              <select id="tvPlan" class="tp-select" required>
+                <option value="">Select plan</option>
+                <option value="Smallie"      data-amount="1900">GOTV Smallie — ₦1,900</option>
+                <option value="Padi"         data-amount="2900">GOTV Padi — ₦2,900</option>
+                <option value="Max"          data-amount="4850">GOTV Max — ₦4,850</option>
+                <option value="Compact"      data-amount="9000">DSTV Compact — ₦9,000</option>
+                <option value="Compact Plus" data-amount="14250">DSTV Compact+ — ₦14,250</option>
+                <option value="Premium"      data-amount="24500">DSTV Premium — ₦24,500</option>
+                <option value="Nova"         data-amount="1850">Startimes Nova — ₦1,850</option>
+                <option value="Basic"        data-amount="2600">Startimes Basic — ₦2,600</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1.5">Amount (₦)</label>
+              <input id="tvAmount" type="number" placeholder="Auto-filled from plan" class="tp-input bg-brand-50" readonly />
+            </div>
+            <button type="submit" class="tp-btn">
+              <span>Pay Subscription</span>
+              <svg class="btn-spinner hidden w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+              </svg>
+            </button>
+          </form>
+        </div>
+      </section>
+
+      <!-- ── BILLS PAYMENT ─────────────────────────────── -->
+      <section id="panel-bills" class="panel">
+        <div class="max-w-md mx-auto">
+          <h2 class="text-xl font-bold text-gray-900 mb-1">Bills Payment</h2>
+          <p class="text-sm text-gray-400 mb-6">Pay electricity and utility bills</p>
+          <form id="billsForm" class="bg-white rounded-2xl p-6 shadow-sm border border-brand-100 space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1.5">Bill Type</label>
+              <select id="billType" class="tp-select" required>
+                <option value="">Select bill type</option>
+                <option>Electricity (Prepaid)</option>
+                <option>Electricity (Postpaid)</option>
+                <option>Water</option>
+                <option>Internet</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1.5">Provider / DisCo</label>
+              <select id="billProvider" class="tp-select" required>
+                <option value="">Select provider</option>
+                <option>AEDC (Abuja)</option>
+                <option>EKEDC (Eko)</option>
+                <option>IKEDC (Ikeja)</option>
+                <option>PHEDC (Port Harcourt)</option>
+                <option>KEDCO (Kano)</option>
+                <option>EEDC (Enugu)</option>
+                <option>BEDC (Benin)</option>
+                <option>JED (Jos)</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1.5">Meter / Account Number</label>
+              <input id="billMeter" type="text" placeholder="Enter meter number" class="tp-input" required />
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1.5">Amount (₦)</label>
+              <input id="billAmount" type="number" placeholder="e.g. 5000" min="500" class="tp-input" required />
+            </div>
+            <div class="flex flex-wrap gap-2">
+              <span class="text-xs text-gray-400 w-full">Quick amounts:</span>
+              <button type="button" data-bill="1000"  class="bill-quick px-3 py-1.5 text-xs border border-brand-200 rounded-lg text-brand-600 hover:bg-brand-50">₦1,000</button>
+              <button type="button" data-bill="2000"  class="bill-quick px-3 py-1.5 text-xs border border-brand-200 rounded-lg text-brand-600 hover:bg-brand-50">₦2,000</button>
+              <button type="button" data-bill="5000"  class="bill-quick px-3 py-1.5 text-xs border border-brand-200 rounded-lg text-brand-600 hover:bg-brand-50">₦5,000</button>
+              <button type="button" data-bill="10000" class="bill-quick px-3 py-1.5 text-xs border border-brand-200 rounded-lg text-brand-600 hover:bg-brand-50">₦10,000</button>
+            </div>
+            <button type="submit" class="tp-btn">
+              <span>Pay Bill</span>
+              <svg class="btn-spinner hidden w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+              </svg>
+            </button>
+          </form>
+        </div>
+      </section>
+
+      <!-- ── SEND MONEY ─────────────────────────────────── -->
+      <section id="panel-transfer" class="panel">
+        <div class="max-w-md mx-auto">
+          <h2 class="text-xl font-bold text-gray-900 mb-1">Send Money</h2>
+          <p class="text-sm text-gray-400 mb-6">Transfer funds to another TarabaPay user</p>
+          <form id="transferForm" class="bg-white rounded-2xl p-6 shadow-sm border border-brand-100 space-y-4">
+            <div>
+              <label for="recipientAccountNumber" class="block text-sm font-medium text-gray-700 mb-1.5">Recipient account number</label>
+              <input id="recipientAccountNumber" type="text" inputmode="numeric" pattern="[0-9]{10}" maxlength="10" placeholder="Last 10 digits of phone number" class="tp-input" required />
+            </div>
+            <div>
+              <label for="transferAmount" class="block text-sm font-medium text-gray-700 mb-1.5">Amount (₦)</label>
+              <input id="transferAmount" type="number" min="1" step="0.01" placeholder="Enter amount" class="tp-input" required />
+            </div>
+            <div>
+              <label for="transferNote" class="block text-sm font-medium text-gray-700 mb-1.5">Note (optional)</label>
+              <input id="transferNote" type="text" maxlength="120" placeholder="What is this for?" class="tp-input" />
+            </div>
+            <button type="submit" class="tp-btn">
+              <span>Send Money</span>
+              <svg class="btn-spinner hidden w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+              </svg>
+            </button>
+          </form>
+        </div>
+      </section>
+
+      <!-- ── SCAN TO PAY ────────────────────────────────── -->
+      <section id="panel-scan" class="panel">
+        <div class="max-w-md mx-auto">
+          <h2 class="text-xl font-bold text-gray-900 mb-1">Scan to Pay</h2>
+          <p class="text-sm text-gray-400 mb-6">Scan a QR code to initiate a payment</p>
+          <div class="bg-white rounded-2xl p-6 shadow-sm border border-brand-100 space-y-4">
+            <div id="qr-reader" class="rounded-xl overflow-hidden"></div>
+            <div id="qrResult" class="hidden p-4 bg-brand-50 rounded-xl border border-brand-200">
+              <p class="text-xs text-gray-500 mb-1">Scanned data:</p>
+              <p id="qrResultText" class="text-sm font-medium text-gray-800 break-all"></p>
+            </div>
+            <div class="flex gap-3">
+              <button id="startScanBtn" class="tp-btn">Start Camera Scan</button>
+              <button id="stopScanBtn"  class="tp-btn hidden" style="background:#64748b">Stop Scan</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── TRANSACTION HISTORY ───────────────────────── -->
+      <section id="panel-history" class="panel">
+        <div class="max-w-2xl mx-auto">
+          <div class="flex items-center justify-between mb-6">
+            <div>
+              <h2 class="text-xl font-bold text-gray-900">Transactions</h2>
+              <p class="text-sm text-gray-400">Your full transaction history</p>
+            </div>
+            <button id="refreshTxnsBtn"
+              class="flex items-center gap-1.5 text-sm text-brand-600 hover:text-brand-700 font-medium">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+              </svg>
+              Refresh
+            </button>
+          </div>
+          <div id="txnsList" class="space-y-3">
+            <p class="text-center py-10 text-gray-400 text-sm">Loading transactions…</p>
+          </div>
+          <div id="txnPagination" class="flex justify-center gap-3 mt-6"></div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+</div>
+
+<!-- ══ MOBILE BOTTOM NAV ════════════════════════════════════ -->
+<nav class="md:hidden fixed bottom-0 inset-x-0 bg-white border-t border-brand-100 flex justify-around py-2 z-30"
+  aria-label="Mobile navigation">
+  <button data-panel="overview" class="mobile-nav-btn active">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+        d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+    </svg>
+    Home
+  </button>
+  <button data-panel="data" class="mobile-nav-btn">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+        d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0"/>
+    </svg>
+    Data
+  </button>
+  <button data-panel="airtime" class="mobile-nav-btn">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+        d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+    </svg>
+    Airtime
+  </button>
+  <button data-panel="transfer" class="mobile-nav-btn">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3m4-4l-4 4m0 0l4 4"/>
+    </svg>
+    Send
+  </button>
+  <button data-panel="bills" class="mobile-nav-btn">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+    </svg>
+    Bills
+  </button>
+  <button data-panel="history" class="mobile-nav-btn">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+        d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+    </svg>
+    History
+  </button>
+</nav>
+
+<!-- Toast -->
+<div id="toast" role="alert" aria-live="polite"></div>
+
+<script src="js/dashboard.js"></script>
+<script src="js/services.js"></script>
+</body>
+</html>

@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TarabaPay — Fast &amp; Secure Payments</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50:  '#f0f9ff', 100: '#e0f2fe', 200: '#bae6fd',
+              300: '#7dd3fc', 400: '#38bdf8', 500: '#0ea5e9',
+              600: '#0284c7', 700: '#0369a1', 800: '#075985', 900: '#0c4a6e'
+            }
+          },
+          fontFamily: { sans: ['Inter','ui-sans-serif','system-ui'] }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <!-- Supabase JS SDK — needed for direct auth from the frontend -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+</head>
+<body class="bg-brand-50 font-sans min-h-screen flex flex-col">
+
+  <!-- ── NAVBAR ──────────────────────────────────────────── -->
+  <nav class="bg-white shadow-sm sticky top-0 z-40">
+    <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <div class="w-9 h-9 rounded-xl bg-brand-500 flex items-center justify-center">
+          <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
+          </svg>
+        </div>
+        <span class="text-xl font-bold text-brand-700">TarabaPay</span>
+      </div>
+      <div class="hidden md:flex gap-6 text-sm font-medium text-gray-500">
+        <a href="#features" class="hover:text-brand-600 transition">Features</a>
+        <a href="#how" class="hover:text-brand-600 transition">How it works</a>
+      </div>
+      <div class="flex gap-3">
+        <button id="navLoginBtn"
+          class="px-4 py-2 text-sm font-medium text-brand-600 border border-brand-200 rounded-lg hover:bg-brand-50 transition">
+          Log In
+        </button>
+        <button id="navSignupBtn"
+          class="px-4 py-2 text-sm font-medium text-white bg-brand-500 rounded-lg hover:bg-brand-600 transition">
+          Get Started
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ── HERO ────────────────────────────────────────────── -->
+  <section class="flex-1 flex items-center justify-center py-24 px-4">
+    <div class="text-center max-w-2xl">
+      <span class="inline-block px-4 py-1.5 bg-brand-100 text-brand-700 text-xs font-semibold rounded-full mb-5 tracking-wide uppercase">
+        Nigeria's Trusted VTU Platform
+      </span>
+      <h1 class="text-4xl md:text-5xl font-bold text-gray-900 leading-tight mb-5">
+        Buy Data, Pay Bills &<br class="hidden md:block" />
+        <span class="text-brand-500">Top Up Airtime</span> Instantly
+      </h1>
+      <p class="text-gray-500 text-lg mb-8 leading-relaxed max-w-xl mx-auto">
+        Fund your wallet and purchase data bundles, airtime, TV subscriptions,
+        and electricity bills — all in one place, secured by Paystack.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <button id="heroSignupBtn"
+          class="px-8 py-3.5 bg-brand-500 text-white font-semibold rounded-xl hover:bg-brand-600 transition shadow-lg shadow-brand-200">
+          Create Free Account
+        </button>
+        <button id="heroLoginBtn"
+          class="px-8 py-3.5 bg-white text-brand-600 font-semibold rounded-xl border border-brand-200 hover:bg-brand-50 transition">
+          Sign In
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FEATURES ─────────────────────────────────────────── -->
+  <section id="features" class="py-20 px-4 bg-white">
+    <div class="max-w-6xl mx-auto">
+      <h2 class="text-3xl font-bold text-center text-gray-900 mb-3">Everything you need</h2>
+      <p class="text-center text-gray-400 mb-14">One dashboard for all your payment needs</p>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+
+        <div class="feature-card p-6 rounded-2xl bg-brand-50 text-center">
+          <div class="w-14 h-14 bg-brand-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
+            <svg class="w-7 h-7 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0"/>
+            </svg>
+          </div>
+          <h3 class="font-semibold text-gray-800">Buy Data</h3>
+          <p class="text-xs text-gray-400 mt-1">MTN, Airtel, Glo, 9mobile</p>
+        </div>
+
+        <div class="feature-card p-6 rounded-2xl bg-brand-50 text-center">
+          <div class="w-14 h-14 bg-brand-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
+            <svg class="w-7 h-7 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+            </svg>
+          </div>
+          <h3 class="font-semibold text-gray-800">Airtime</h3>
+          <p class="text-xs text-gray-400 mt-1">All networks, instant top-up</p>
+        </div>
+
+        <div class="feature-card p-6 rounded-2xl bg-brand-50 text-center">
+          <div class="w-14 h-14 bg-brand-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
+            <svg class="w-7 h-7 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+            </svg>
+          </div>
+          <h3 class="font-semibold text-gray-800">TV Subscription</h3>
+          <p class="text-xs text-gray-400 mt-1">DSTV, GOTV, Startimes</p>
+        </div>
+
+        <div class="feature-card p-6 rounded-2xl bg-brand-50 text-center">
+          <div class="w-14 h-14 bg-brand-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
+            <svg class="w-7 h-7 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+            </svg>
+          </div>
+          <h3 class="font-semibold text-gray-800">Bills Payment</h3>
+          <p class="text-xs text-gray-400 mt-1">Electricity &amp; utilities</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ── HOW IT WORKS ──────────────────────────────────────── -->
+  <section id="how" class="py-20 px-4 bg-brand-50">
+    <div class="max-w-4xl mx-auto text-center">
+      <h2 class="text-3xl font-bold text-gray-900 mb-3">How it works</h2>
+      <p class="text-gray-400 mb-14">Three simple steps to get started</p>
+      <div class="grid md:grid-cols-3 gap-10">
+        <div class="flex flex-col items-center">
+          <div class="w-12 h-12 bg-brand-500 text-white rounded-full font-bold text-lg flex items-center justify-center mb-4">1</div>
+          <h3 class="font-semibold text-gray-800 mb-2">Create Account</h3>
+          <p class="text-sm text-gray-400">Sign up in seconds with your email and phone number.</p>
+        </div>
+        <div class="flex flex-col items-center">
+          <div class="w-12 h-12 bg-brand-500 text-white rounded-full font-bold text-lg flex items-center justify-center mb-4">2</div>
+          <h3 class="font-semibold text-gray-800 mb-2">Fund Wallet</h3>
+          <p class="text-sm text-gray-400">Add money securely via Paystack — cards, bank transfer &amp; USSD.</p>
+        </div>
+        <div class="flex flex-col items-center">
+          <div class="w-12 h-12 bg-brand-500 text-white rounded-full font-bold text-lg flex items-center justify-center mb-4">3</div>
+          <h3 class="font-semibold text-gray-800 mb-2">Pay &amp; Enjoy</h3>
+          <p class="text-sm text-gray-400">Buy data, airtime, or pay any bill instantly from your dashboard.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FOOTER ────────────────────────────────────────────── -->
+  <footer class="bg-white border-t border-brand-100 py-8 px-4 text-center text-sm text-gray-400">
+    <div class="flex items-center justify-center gap-2 mb-2">
+      <div class="w-6 h-6 rounded-lg bg-brand-500 flex items-center justify-center">
+        <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
+        </svg>
+      </div>
+      <span class="font-semibold text-brand-700">TarabaPay</span>
+    </div>
+    <p>&copy; 2026 TarabaPay. All rights reserved. Powered by Paystack &amp; Supabase.</p>
+  </footer>
+
+  <!-- ── AUTH MODAL ────────────────────────────────────────── -->
+  <div id="authModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"
+    style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);backdrop-filter:blur(4px);z-index:50;align-items:center;justify-content:center;padding:1rem;">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-8 relative">
+
+      <button id="closeModal" aria-label="Close"
+        class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+
+      <div class="text-center mb-6">
+        <div class="w-12 h-12 bg-brand-500 rounded-2xl flex items-center justify-center mx-auto mb-3">
+          <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
+          </svg>
+        </div>
+        <h2 id="modalTitle" class="text-2xl font-bold text-gray-900">Welcome back</h2>
+        <p id="modalSubtitle" class="text-sm text-gray-400 mt-1">Sign in to your TarabaPay account</p>
+      </div>
+
+      <!-- Tab switcher -->
+      <div class="flex bg-brand-50 rounded-xl p-1 mb-6">
+        <button id="tabLogin"
+          class="flex-1 py-2 text-sm font-medium rounded-lg bg-white text-brand-600 shadow transition">
+          Log In
+        </button>
+        <button id="tabSignup"
+          class="flex-1 py-2 text-sm font-medium rounded-lg text-gray-400 transition">
+          Sign Up
+        </button>
+      </div>
+
+      <!-- Alert -->
+      <div id="authAlert" class="hidden mb-4 p-3 rounded-lg text-sm font-medium"></div>
+      <button id="resendConfirmationBtn" type="button"
+        class="hidden w-full mb-4 text-sm font-medium text-brand-600 hover:text-brand-700">
+        Resend confirmation email
+      </button>
+
+      <!-- LOGIN FORM -->
+      <form id="loginForm" class="space-y-4">
+        <div>
+          <label for="loginPhone" class="block text-sm font-medium text-gray-700 mb-1.5">Phone number</label>
+          <input id="loginPhone" type="tel" placeholder="08012345678" required autocomplete="tel"
+            class="tp-input" />
+        </div>
+        <div>
+          <label for="loginPassword" class="block text-sm font-medium text-gray-700 mb-1.5">Password</label>
+          <input id="loginPassword" type="password" placeholder="••••••••" required autocomplete="current-password"
+            class="tp-input" />
+        </div>
+        <button type="submit" class="tp-btn">
+          <span id="loginBtnText">Sign In</span>
+          <svg id="loginSpinner" class="hidden w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+          </svg>
+        </button>
+      </form>
+
+      <!-- SIGNUP FORM -->
+      <form id="signupForm" class="space-y-4 hidden">
+        <div>
+          <label for="signupName" class="block text-sm font-medium text-gray-700 mb-1.5">Full name</label>
+          <input id="signupName" type="text" placeholder="Aminu Taraba" required autocomplete="name"
+            class="tp-input" />
+        </div>
+        <div>
+          <label for="signupPhone" class="block text-sm font-medium text-gray-700 mb-1.5">Phone number</label>
+          <input id="signupPhone" type="tel" placeholder="08012345678" required autocomplete="tel"
+            class="tp-input" />
+        </div>
+        <div>
+          <label for="signupAccountNumber" class="block text-sm font-medium text-gray-700 mb-1.5">Account number</label>
+          <input id="signupAccountNumber" type="text" placeholder="Generated from your phone number" readonly
+            class="tp-input bg-gray-50" />
+          <p id="signupAccountPreview" class="text-xs text-brand-600 mt-1.5">Enter your phone number to generate your account number.</p>
+        </div>
+        <div>
+          <label for="signupEmail" class="block text-sm font-medium text-gray-700 mb-1.5">Email address</label>
+          <input id="signupEmail" type="email" placeholder="you@example.com" required autocomplete="email"
+            class="tp-input" />
+          <p class="text-xs text-gray-400 mt-1.5">Email must be unique. You may reuse a phone number for another account.</p>
+        </div>
+        <div>
+          <label for="signupPassword" class="block text-sm font-medium text-gray-700 mb-1.5">Password</label>
+          <input id="signupPassword" type="password" placeholder="Min. 8 characters" required minlength="8"
+            autocomplete="new-password" class="tp-input" />
+        </div>
+        <button type="submit" class="tp-btn">
+          <span id="signupBtnText">Create Account</span>
+          <svg id="signupSpinner" class="hidden w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+          </svg>
+        </button>
+      </form>
+
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" role="alert" aria-live="polite"></div>
+
+  <script src="js/auth.js"></script>
+</body>
+</html>

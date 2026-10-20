@@ -1,0 +1,243 @@
+/* ============================================================
+   TarabaPay — Custom Styles
+   Palette: light blue (sky) + white
+   ============================================================ */
+
+/* ── Base ─────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  background-color: #f0f9ff; /* sky-50 */
+  color: #0f172a;
+}
+
+/* ── Scrollbar ────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #f0f9ff; }
+::-webkit-scrollbar-thumb { background: #7dd3fc; border-radius: 99px; }
+
+/* ── Smooth transitions globally ──────────────────────────── */
+a, button, input, select { transition: all .15s ease; }
+
+/* ── Loading spinner ─────────────────────────────────────── */
+@keyframes spin { to { transform: rotate(360deg); } }
+.animate-spin { animation: spin .7s linear infinite; }
+
+/* ── Toast notification ──────────────────────────────────── */
+#toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 9999;
+  min-width: 260px;
+  max-width: 360px;
+  padding: 14px 18px;
+  border-radius: 14px;
+  font-size: .875rem;
+  font-weight: 500;
+  box-shadow: 0 8px 30px rgba(0,0,0,.12);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transform: translateY(80px);
+  opacity: 0;
+  pointer-events: none;
+}
+#toast.show {
+  transform: translateY(0);
+  opacity: 1;
+  pointer-events: auto;
+  transition: transform .3s ease, opacity .3s ease;
+}
+#toast.hide {
+  transform: translateY(80px);
+  opacity: 0;
+  transition: transform .3s ease, opacity .3s ease;
+}
+#toast.success { background: #0ea5e9; color: #fff; }
+#toast.error   { background: #ef4444; color: #fff; }
+#toast.info    { background: #0284c7; color: #fff; }
+
+/* ── Auth modal backdrop ─────────────────────────────────── */
+#authModal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.45);
+  backdrop-filter: blur(4px);
+  z-index: 50;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+#authModal.open { display: flex; }
+
+/* ── Feature card hover lift ─────────────────────────────── */
+.feature-card {
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+.feature-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(14,165,233,.15);
+}
+
+/* ── Service card ────────────────────────────────────────── */
+.service-card {
+  background: #fff;
+  border: 1.5px solid #e0f2fe;
+  border-radius: 1.25rem;
+  padding: 1.5rem;
+  cursor: pointer;
+  transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+}
+.service-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 24px rgba(14,165,233,.12);
+  border-color: #7dd3fc;
+}
+.service-card.active {
+  border-color: #0ea5e9;
+  box-shadow: 0 0 0 3px rgba(14,165,233,.2);
+}
+
+/* ── Dashboard sidebar ───────────────────────────────────── */
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  padding: .65rem 1rem;
+  border-radius: .75rem;
+  font-size: .875rem;
+  font-weight: 500;
+  color: #64748b;
+  transition: background .15s, color .15s;
+}
+.nav-link:hover  { background: #e0f2fe; color: #0284c7; }
+.nav-link.active { background: #0ea5e9; color: #fff; }
+
+/* ── Panel section ───────────────────────────────────────── */
+.panel { display: none; }
+.panel.active { display: block; }
+
+/* ── Wallet card gradient ────────────────────────────────── */
+.wallet-card {
+  background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+  border-radius: 1.5rem;
+  color: #fff;
+  padding: 2rem;
+  position: relative;
+  overflow: hidden;
+}
+.wallet-card::before {
+  content: '';
+  position: absolute;
+  top: -40px; right: -40px;
+  width: 180px; height: 180px;
+  background: rgba(255,255,255,.08);
+  border-radius: 50%;
+}
+.wallet-card::after {
+  content: '';
+  position: absolute;
+  bottom: -60px; left: -30px;
+  width: 220px; height: 220px;
+  background: rgba(255,255,255,.06);
+  border-radius: 50%;
+}
+
+/* ── Transaction badge ───────────────────────────────────── */
+.txn-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: .2rem .65rem;
+  border-radius: 99px;
+  font-size: .7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .03em;
+}
+.txn-badge.success { background: #dcfce7; color: #16a34a; }
+.txn-badge.pending { background: #fef9c3; color: #ca8a04; }
+.txn-badge.failed  { background: #fee2e2; color: #dc2626; }
+
+/* ── Form inputs ─────────────────────────────────────────── */
+.tp-input {
+  width: 100%;
+  padding: .75rem 1rem;
+  border: 1.5px solid #e0f2fe;
+  border-radius: .75rem;
+  font-size: .875rem;
+  background: #fff;
+  outline: none;
+  color: #0f172a;
+}
+.tp-input:focus {
+  border-color: #0ea5e9;
+  box-shadow: 0 0 0 3px rgba(14,165,233,.15);
+}
+
+.tp-select {
+  width: 100%;
+  padding: .75rem 1rem;
+  border: 1.5px solid #e0f2fe;
+  border-radius: .75rem;
+  font-size: .875rem;
+  background: #fff;
+  outline: none;
+  color: #0f172a;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%230ea5e9'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right .75rem center;
+  background-size: 1.25rem;
+}
+.tp-select:focus {
+  border-color: #0ea5e9;
+  box-shadow: 0 0 0 3px rgba(14,165,233,.15);
+}
+
+/* ── Primary button ──────────────────────────────────────── */
+.tp-btn {
+  width: 100%;
+  padding: .85rem;
+  background: #0ea5e9;
+  color: #fff;
+  font-weight: 600;
+  border-radius: .75rem;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .5rem;
+  font-size: .9rem;
+  transition: background .15s, transform .1s;
+}
+.tp-btn:hover   { background: #0284c7; }
+.tp-btn:active  { transform: scale(.98); }
+.tp-btn:disabled { opacity: .6; cursor: not-allowed; }
+
+/* ── QR scanner area ─────────────────────────────────────── */
+#qr-reader {
+  border: 2px dashed #7dd3fc !important;
+  border-radius: 1rem !important;
+  overflow: hidden;
+}
+
+/* ── Mobile bottom nav ───────────────────────────────────── */
+.mobile-nav-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .2rem;
+  padding: .5rem .75rem;
+  border-radius: .75rem;
+  font-size: .65rem;
+  font-weight: 500;
+  color: #94a3b8;
+  transition: color .15s, background .15s;
+}
+.mobile-nav-btn.active { color: #0ea5e9; }
+.mobile-nav-btn svg { width: 1.4rem; height: 1.4rem; }
